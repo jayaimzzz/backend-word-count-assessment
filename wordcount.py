@@ -40,12 +40,41 @@ print_words() and print_top().
 """
 
 import sys
+import collections
+import re
 
 # +++your code here+++
 # Define print_words(filename) and print_top(filename) functions.
 # You could write a helper utility function that reads a file
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
+
+def count_words(filename):
+    file = open(filename, "r")
+    words = re.findall(r"[\w']+",file.read())
+    words = map(lambda word: word.lower(), words)
+    words = filter(lambda x: x != "'", words)
+    return collections.Counter(words)
+
+# def print_words(filename):
+#     all_words_count = count_words(filename)
+#     sorted_all_words_count = collections.OrderedDict(sorted(all_words_count.items()))
+#     for word in sorted_all_words_count:
+#         print ('{} {}'.format(word, sorted_all_words_count[word]))
+
+def print_words(filename):
+    all_words_count = count_words(filename)
+    arr = [(word, all_words_count[word]) for word in all_words_count]
+    sorted_all_words_count = sorted(arr)
+    for word in sorted_all_words_count:
+        print ('{} {}'.format(word[0], word[1]))
+
+def print_top(filename):
+    all_words_count = count_words(filename)
+    arr = [(word, all_words_count[word]) for word in all_words_count]
+    arr = sorted(arr, key=lambda x:x[1], reverse = True)
+    for item in arr[:20]:
+        print (item[0] + " " + str(item[1]))
 
 ###
 
